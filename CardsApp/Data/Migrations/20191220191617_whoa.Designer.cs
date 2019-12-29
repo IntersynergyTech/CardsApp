@@ -4,14 +4,16 @@ using CardsApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CardsApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191220191617_whoa")]
+    partial class whoa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -432,7 +434,7 @@ namespace CardsApp.Data.Migrations
                         .HasForeignKey("DrawParentId");
 
                     b.HasOne("CardsApp.Data.Game", "Game")
-                        .WithMany("Games")
+                        .WithMany()
                         .HasForeignKey("GameId");
 
                     b.HasOne("CardsApp.Data.Player", "Winner")
@@ -468,7 +470,7 @@ namespace CardsApp.Data.Migrations
             modelBuilder.Entity("CardsApp.Data.PlayerHand", b =>
                 {
                     b.HasOne("CardsApp.Data.Hand", "Hand")
-                        .WithMany("Scores")
+                        .WithMany()
                         .HasForeignKey("HandId");
 
                     b.HasOne("CardsApp.Data.Player", "Player")
