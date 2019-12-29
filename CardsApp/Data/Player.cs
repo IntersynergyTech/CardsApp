@@ -32,12 +32,12 @@ namespace CardsApp.Data
         /// <summary>
         /// The last time the user settled their balance.
         /// </summary>
-        public DateTime LastPaid { get; set; }
+        public DateTime LastPaid { get; set; } = DateTime.MinValue;
 
         /// <summary>
         /// The user's current balance. Probably.
         /// </summary>
-        public Decimal CurrentBalance { get; set; }
+        public decimal CurrentBalance { get; set; } = 0;
 
 
         /// <summary>

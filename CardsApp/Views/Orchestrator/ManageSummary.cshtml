@@ -1,0 +1,28 @@
+﻿@model CardsApp.Data.GamePlayed
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">Game Summary</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Game <span class="float-right">@Model.Game.Name</span></li>
+                    <li class="list-group-item">Stake <span class="float-right">£@Model.Stake</span></li>
+                    <li class="list-group-item">Started <span class="float-right">@Model.DateTime</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header">Players</div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var player in Model.Players)
+                    {
+                        <li class="list-group-item">@player.Player.Name <span class="float-right">(@player.Player.Initial)</span></li>
+                    }
+                    
+                </ul>
+            </div>
+        </div>
+    </div>

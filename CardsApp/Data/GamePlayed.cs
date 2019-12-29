@@ -55,6 +55,6 @@ namespace CardsApp.Data
         /// <summary>
         /// Players who played the game.
         /// </summary>
-        public virtual IEnumerable<Player> Players { get; set; }
+        public virtual IEnumerable<GamePlayers> Players { get; set; }
     }
 }

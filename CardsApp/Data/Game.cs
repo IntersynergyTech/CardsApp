@@ -23,6 +23,11 @@ namespace CardsApp.Data
         public string Description { get; set; }
 
         /// <summary>
+        /// The type of game
+        /// </summary>
+        public GameTypes Type { get; set; }
+
+        /// <summary>
         /// The stake that players will usually play into this game 
         /// </summary>
         public decimal DefaultStake { get; set; }
@@ -35,22 +40,22 @@ namespace CardsApp.Data
         /// <summary>
         /// On games with accruing score, the maximum score where anything above this will trigger whatever action for the game. For example, going over may knock a player out.
         /// </summary>
-        public Int32 MaximumScore { get; set; }
+        public int? MaximumScore { get; set; }
 
         /// <summary>
         /// The draw position, where if all remaining players are over this but still in, the game is drawn.
         /// </summary>
-        public Int32 DrawPosition { get; set; }
+        public int? DrawPosition { get; set; }
 
         /// <summary>
         /// If it's a game with a fixed amount of hands, how many hands.
         /// </summary>
-        public Int32 HandsPlayed { get; set; }
+        public int? HandsPlayed { get; set; }
 
         /// <summary>
         /// If it's a game with a fixed amount of hands, if "HandsPlayed" is a fixed amount, or that many per player.
         /// </summary>
-        public bool HandsPlayedPerPlayer { get; set; }
+        public bool? HandsPlayedPerPlayer { get; set; }
 
         /// <summary>
         /// Instances of this game being played.

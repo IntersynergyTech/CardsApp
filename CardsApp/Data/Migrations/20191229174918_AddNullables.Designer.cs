@@ -4,14 +4,16 @@ using CardsApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CardsApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191229174918_AddNullables")]
+    partial class AddNullables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,6 +170,9 @@ namespace CardsApp.Data.Migrations
                     b.Property<decimal>("CurrentBalance")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid?>("GamePlayedId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Initial")
                         .HasColumnType("nvarchar(max)");
 
@@ -181,6 +186,8 @@ namespace CardsApp.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GamePlayedId");
 
                     b.ToTable("Players");
                 });
@@ -441,7 +448,7 @@ namespace CardsApp.Data.Migrations
             modelBuilder.Entity("CardsApp.Data.GamePlayers", b =>
                 {
                     b.HasOne("CardsApp.Data.GamePlayed", "GamePlayed")
-                        .WithMany("Players")
+                        .WithMany()
                         .HasForeignKey("GamePlayedId");
 
                     b.HasOne("CardsApp.Data.Player", "Player")
@@ -454,6 +461,13 @@ namespace CardsApp.Data.Migrations
                     b.HasOne("CardsApp.Data.GamePlayed", "Game")
                         .WithMany("Hands")
                         .HasForeignKey("GameId");
+                });
+
+            modelBuilder.Entity("CardsApp.Data.Player", b =>
+                {
+                    b.HasOne("CardsApp.Data.GamePlayed", null)
+                        .WithMany("Players")
+                        .HasForeignKey("GamePlayedId");
                 });
 
             modelBuilder.Entity("CardsApp.Data.PlayerHand", b =>

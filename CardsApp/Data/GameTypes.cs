@@ -11,10 +11,12 @@ namespace CardsApp.Data
         /// <summary>
         /// Where the winner is the last person to hit a threshold (ie you go over, you're out)
         /// </summary>
+        [AccrualHands]
         Accrual_LastTo = 1,
         /// <summary>
         /// Where the winner is the first person to hit a threshold (ie you go over, you win)
         /// </summary>
+        [AccrualHands]
         Accrual_FirstTo = 2,
         /// <summary>
         /// If the game is won by the player with the highest score after all hands are played.
@@ -29,7 +31,7 @@ namespace CardsApp.Data
         /// <summary>
         /// If the game is a simple game outside of the system. 1 "hand" will be played and the user who isn't knocked out wins.
         /// </summary>
-        [FixedHands(false)]
+        [SimpleNoHands]
         Simple = 16
 
 

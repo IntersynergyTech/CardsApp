@@ -1,0 +1,35 @@
+﻿@using CardsApp.Data
+@using CardsApp.Misc
+@model StartGameModel
+@{
+    ViewData["Title"] = "StartGame";
+}
+
+<h1>StartGame</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateGame">
+            <div class="form-group">
+                <label asp-for="SelectedGame"></label>
+                @Html.DropDownListFor(x => x.SelectedGame, Model.Games.GetDropdownItems<Game>("Name").ToList(), new { @class = "form-control" })
+                <span asp-validation-for="SelectedGame" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedGameStake" class="control-label"></label>
+                <input asp-for="SelectedGameStake" class="form-control" />
+                <span asp-validation-for="SelectedGameStake" class="text-danger"></span>
+                <p class="text-muted">If you leave this blank, the default stake for the game will be used.</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedPlayers"></label>
+                <select multiple="multiple" class="form-control" asp-for="@Model.SelectedPlayers" asp-items="Model.Players.GetDropdownItems(nameof(Player.Name))"> </select>
+                <span asp-validation-for="SelectedPlayers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+
+    </div>
+</div>
