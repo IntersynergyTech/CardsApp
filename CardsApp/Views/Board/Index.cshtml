@@ -1,35 +1,81 @@
-﻿@model IEnumerable<CardsApp.Data.BoardEntry>
+﻿@using CardsApp.Data
+@model ViewBoardModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>The Board</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Difference)
+                Game
             </th>
-            <th></th>
+            @foreach (var player in Model.Players)
+            {
+
+                var balance = Model.PlayerSums[player];
+
+                <th>
+                    <h2>@player.Initial</h2>
+                    <h6>£@balance</h6>
+                </th>
+            }
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var game in Model.Board)
+        {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Difference)
+                @{
+                    var gp = game.Key;
+                }
+                <a asp-controller="Orchestrator" asp-action="View" asp-route-gameId="@game.Key.Id">
+                    <h5>@gp.Game.Name</h5>
+                    <h6><em>Stake: £@gp.Stake, played @gp.DateTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</em></h6>
+                </a>
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
+            @if (gp.IsDraw)
+            {
+                <td colspan="@Model.Players.Count" class="bg-warning text-center"><h4>Game Drawn</h4><h6>See the relevant draw game.</h6></td>
+            }
+            else if (!gp.GameComplete)
+            {
+                <td colspan="@Model.Players.Count" class="bg-info text-center"><h5>Game in progress</h5></td>
+            }
+            else
+            {
+                foreach (var player in Model.Players)
+                {
+                    @if (game.Value.Any(be => be.Player.Id == player.Id)) //Check if the player actually played this game
+                    {
+                        var plhand = game.Value.Single(be => be.Player.Id == player.Id);
+                        <td><h3>@plhand.Difference</h3></td>
+                    }
+                    else
+                    {
+                        <td class="bg-secondary">
+                            <em>not played</em>
+                        </td>
+                    }
+
+                }
+            }
+
         </tr>
-}
-    </tbody>
+        }
+    <tr>
+        <td></td>
+        @foreach (var player in Model.Players)
+        {
+            var scoresum = Model.PlayerSums[player];
+
+            <td class="font-weight-bold @Html.Raw((scoresum >= 0) ? "bg-success" : "bg-warning")">
+                <h4>@scoresum </h4>
+            </td>
+        }
+    </tr>
 </table>

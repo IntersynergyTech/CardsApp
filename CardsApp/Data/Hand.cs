@@ -19,10 +19,10 @@ namespace CardsApp.Data
         /// <summary>
         /// The time the hand was played.
         /// </summary>
-        public DateTime DateTime { get; set; }
+        public DateTime DateTime { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Scores from playesr
+        /// Scores from players
         /// </summary>
         public virtual IEnumerable<PlayerHand> Scores { get; set; }
 

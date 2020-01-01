@@ -2,7 +2,14 @@
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
-    <div class="row">
+@if (Model.Winner != null)
+{
+    <div class="alert alert-success" role="alert">
+        <strong>@Model.Winner.Name</strong> won this game and won £@(Model.Stake * Model.Players.Count())
+    </div>
+}
+
+<div class="row">
         <div class="col-6">
             <div class="card">
                 <div class="card-header">Game Summary</div>

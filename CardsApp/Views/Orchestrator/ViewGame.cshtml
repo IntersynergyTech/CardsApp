@@ -1,0 +1,67 @@
+﻿@model CardsApp.Data.GamePlayed
+@{
+    ViewData["Title"] = "View Game";
+}
+
+<h1>View Game</h1>
+
+@await Html.PartialAsync("ManageSummary")
+
+<table class="table text-center">
+    <thead>
+        <tr>
+            @foreach (var player in Model.Players)
+            {
+                <th>
+                    <h2>@player.Player.Initial</h2>
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var hand in Model.Hands)
+        {
+            <tr>
+                @foreach (var player in Model.Players)
+                {
+                    @if (hand.Scores.Any(playerHand => playerHand.Player.Id == player.Player.Id)) //Check if the player actually played this hand
+                    {
+                        var plhand = hand.Scores.First(playerHand => playerHand.Player.Id == player.Player.Id);
+                        <td class="@Html.Raw(plhand.KnockedOut ? "bg-danger" : "")">
+                            @if (plhand.Done)
+                            {
+                                @plhand.Score
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="bg-secondary">
+                            -
+                        </td>
+                    }
+
+                }
+            </tr>
+        }
+        <tr>
+            @foreach (var player in Model.Players)
+            {
+                var scoresum = player.GamePlayed.Hands.Sum(hand => hand.Scores.FirstOrDefault(playerHand => playerHand.Player.Id == player.Player.Id)?.Score);
+
+                <td class="font-weight-bold @Html.Raw((scoresum >= Model.Game.DrawPosition && scoresum < Model.Game.MaximumScore) ? "bg-warning" : "") @Html.Raw((scoresum >= Model.Game.MaximumScore) ? "bg-danger" : "") @Html.Raw(player.GamePlayed.Winner != null && player.GamePlayed.Winner.Id == player.Player.Id?"bg-success":"")">
+                    <h4>@scoresum </h4>
+                </td>
+            }
+        </tr>
+    </tbody>
+</table>
+
+
+@if (!Model.GameComplete)
+{
+    <script>
+        setTimeout(window.reload(), 2000)
+    </script>
+}
+

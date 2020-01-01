@@ -27,8 +27,13 @@ namespace CardsApp.Data
         public bool KnockedOut { get; set; }
 
         /// <summary>
+        /// If the details for this hand have been submitted. Also used to work out if the hand is done.
+        /// </summary>
+        public bool Done { get; set; }
+
+        /// <summary>
         /// The amount of points the player got this hand.
         /// </summary>
-        public Int32 Score { get; set; }
+        public int Score { get; set; }
     }
 }

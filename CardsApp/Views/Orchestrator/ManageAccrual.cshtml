@@ -3,6 +3,7 @@
     ViewData["Title"] = "ManageAccrual";
 }
 
-<h1>ManageAccrual</h1>
+<h1>Manage Accrual Game</h1>
 
-@Html.Partial("ManageSummary", Model);
+@await Html.PartialAsync("ManageSummary", Model)
+@await Html.PartialAsync("ManageHandTable",Model)
