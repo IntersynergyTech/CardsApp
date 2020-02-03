@@ -85,7 +85,7 @@ namespace CardsApp.PokerModels
                 case "9":
                     card.Value = CardValue.Nine;
                     break;
-                case "10":
+                case "0":
                 case "t":
                     card.Value = CardValue.Ten;
                     break;
