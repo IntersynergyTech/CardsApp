@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CardsApp.PokerModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,6 +35,32 @@ namespace CardsAppTestProject
             Assert.AreEqual(CardSuit.Hearts, result.Suit);
             Assert.AreEqual(CardValue.Eight, result.Value);
         }
+    }
+
+    [TestClass]
+    public class PokerRankingTests
+    {
+
+        [TestMethod]
+        public void GetRankingForQuads()
+        {
+            var card1 = new Card("8h");
+            var card2 = new Card("8d");
+            var card3 = new Card("8c");
+            var card4 = new Card("8s");
+            var card5 = new Card("7s");
+            
+            var hand = new Hand
+            {
+                Cards = new List<Card>
+                {
+                    card1, card2, card3, card4, card5
+                }
+            };
+            var handRanking = hand.GetStrength();
+            Assert.AreEqual(PokerHandRanking.FourOfAKind, handRanking.HandRanking);
+        }
+        
     }
 
     public static class ExampleHands
@@ -76,4 +103,5 @@ namespace CardsAppTestProject
             };
         }
     }
+   
 }

@@ -6,58 +6,6 @@ using System.Threading.Tasks;
 
 namespace CardsApp.PokerModels
 {
-    public class PokerCard
-    {
-        public CardSuit Suit { get; set; }
-        public CardValue Value { get; set; }
-
-        public override string ToString()
-        {
-            var valueStr = ((int) Value) <= 11 ? ((int) Value).ToString() : Value.ToString().ToUpper()[0].ToString();
-            return $"{valueStr}{Suit.ToString().ToLower()[0]}";
-        }
-
-        public PokerCard(CardSuit suit, CardValue value)
-        {
-            Suit = suit;
-            Value = value;
-        }
-
-        public PokerCard()
-        {
-            
-        }
-    }
-
-
-    public interface IDefaultPokerHand
-    {
-        public List<PokerCard> CardsInHand { get; set; }
-        public PokerHandRanking Ranking { get; set; }
-        public RankingType RankingType { get; }
-    }
-
-    public class ChinesePokerHand : IDefaultPokerHand
-    {
-        public IOrderedEnumerable<PokerCard> CardsInOrder
-        {
-            get { return CardsInHand.OrderBy(x => x.Value); }
-        }
-
-        public ChineseHandPosition Position;
-
-        public ChinesePokerHand(ChineseHandPosition position, List<PokerCard> cards, PokerHandRanking ranking)
-        {
-            Position = position;
-            Ranking = ranking;
-        }
-
-        public List<PokerCard> CardsInHand { get; set; }
-        public PokerHandRanking Ranking { get; set; }
-
-        public RankingType RankingType => RankingType.Default;
-    }
-
     /// <summary>
     /// A class to represent the the state of a players 13 card board at the end of the hand
     /// </summary>
@@ -85,40 +33,23 @@ namespace CardsApp.PokerModels
                     return false;
                 }
 
-                if (top.CardsInHand.Count != 3) return false;
-                if (middle.CardsInHand.Count != 5) return false;
-                if (bottom.CardsInHand.Count != 5) return false;
-                if (top.Ranking > middle.Ranking) return false; //Top beats Middle 
-                if (middle.Ranking > bottom.Ranking) return false; //Middle beats Bottom
-                if (top.Ranking > bottom.Ranking) return false; //Top beats Bottom
+                var topVsMiddle = top.Compare(middle);
+                var middleVsBottom = middle.Compare(bottom);
+                var topVsBottom = top.Compare(bottom);
 
-                if (top.Ranking == middle.Ranking)
+                if (top.Cards.Count != 3) return false;
+                if (middle.Cards.Count != 5) return false;
+                if (bottom.Cards.Count != 5) return false;
+                if (topVsMiddle != null && !topVsMiddle.Value)
                 {
-                    var orderedTop = top.CardsInOrder.ToImmutableList();
-                    var orderedMiddle = middle.CardsInOrder.ToImmutableList();
-                    for (var i = 0; i < top.CardsInHand.Count; i++)
-                    {
-                        var topCard = orderedTop[i];
-                        var middleCard = orderedMiddle[i];
-                        if (topCard.Value > middleCard.Value) return false;
-                        if (topCard.Value < middleCard.Value) return true;
-                    }
+                    return false;
                 }
 
-                if (middle.Ranking != bottom.Ranking) return true;
+                if (middleVsBottom != null && !middleVsBottom.Value)
                 {
-                    var orderedMiddle = middle.CardsInOrder.ToImmutableList();
-                    var orderedBottom = bottom.CardsInOrder.ToImmutableList();
-                    for (var i = 0; i < top.CardsInHand.Count; i++)
-                    {
-                        var middleCard = orderedMiddle[i];
-                        var bottomCard = orderedBottom[i];
-                        if (middleCard.Value > bottomCard.Value) return false;
-                        if (middleCard.Value < bottomCard.Value) return true;
-                    }
+                    return false;
                 }
-
-                return true;
+                return topVsBottom == null || topVsBottom.Value;
             }
         }
 
@@ -129,13 +60,14 @@ namespace CardsApp.PokerModels
                 if (!IsValid) return false;
                 var top = Hands.FirstOrDefault(x => x.Position == ChineseHandPosition.Top);
                 if (top == null) return false;
-                if (top.Ranking == PokerHandRanking.HighCard) return false;
-                switch (top.Ranking)
+                var topStr = top.GetStrength();
+                if (topStr.HandRanking == PokerHandRanking.HighCard) return false;
+                switch (topStr.HandRanking)
                 {
                     case PokerHandRanking.Pair:
-                        return top.CardsInHand.Count(x => x.Value == CardValue.Queen) == 2 ||
-                               top.CardsInHand.Count(x => x.Value == CardValue.King) == 2 ||
-                               top.CardsInHand.Count(x => x.Value == CardValue.Ace) == 2;
+                        return top.Cards.Count(x => x.Rank == Rank.Queen) == 2 ||
+                               top.Cards.Count(x => x.Rank == Rank.King) == 2 ||
+                               top.Cards.Count(x => x.Rank == Rank.Ace) == 2;
                     case PokerHandRanking.ThreeOfAKind:
                         return true;
                     default:
@@ -155,11 +87,11 @@ namespace CardsApp.PokerModels
                 var top = Hands.First(x => x.Position == ChineseHandPosition.Top);
                 var middle = Hands.First(x => x.Position == ChineseHandPosition.Middle);
                 var bottom = Hands.First(x => x.Position == ChineseHandPosition.Bottom);
-                if (top.Ranking == PokerHandRanking.ThreeOfAKind) return true;
-                if (middle.Ranking >= PokerHandRanking.FullHouse) return true;
-                return bottom.Ranking >= PokerHandRanking.FourOfAKind;
+                
+                if (top.GetStrength().HandRanking == PokerHandRanking.ThreeOfAKind) return true;
+                if (middle.GetStrength().HandRanking >= PokerHandRanking.FullHouse) return true;
+                return bottom.GetStrength().HandRanking >= PokerHandRanking.FourOfAKind;
             }
         }
-
     }
 }
