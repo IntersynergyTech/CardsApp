@@ -7,9 +7,47 @@ namespace CardsApp.Services
 {
     public class ChineseScoringService
     {
-        public int Points()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Positive for player1, negative for player2</returns>
+        public int Points(ChinesePokerBoard player1, ChinesePokerBoard player2)
         {
-            return 0;
+            if (!player1.IsValid || !player2.IsValid) throw new InvalidBoardException();
+            if (!player1.IsQualifying && !player2.IsQualifying) return 0;
+            var totalPoints = 0;
+            if (player1.IsQualifying && !player2.IsQualifying) totalPoints += 6;
+            else if (!player1.IsQualifying && player2.IsQualifying) totalPoints += 6;
+            else
+            {
+                var player1Rounds = 0;
+                var player2Rounds = 0;
+                foreach (var hand in player1.Hands)
+                {
+                    var player2Hand = player2.Hands.First(x => x.Position == hand.Position);
+                    var compareResult = hand.Compare(player2Hand); //True if hand1 false if hand 2
+                    if(compareResult == null) continue; //Null means hands are exactly equal
+                    if (compareResult.Value) player1Rounds++;
+                    else player2Rounds++;
+                }
+
+                if (player1Rounds == 3) player1Rounds += 3; //Add player 1 bonus for winning all hands
+                else if (player2Rounds == 3) player2Rounds += 3; //Add player 2 bonus
+
+                totalPoints += player1Rounds;
+                totalPoints -= player2Rounds;
+            }
+
+            if (player1.IsQualifying)
+            {
+                totalPoints += player1.Hands.Sum(CalculateBonus);
+            }
+
+            if (player2.IsQualifying)
+            {
+                totalPoints -= player1.Hands.Sum(CalculateBonus);
+            }
+            return totalPoints;
         }
 
         public int CalculateBonus(ChinesePokerHand pokerHand)
@@ -112,4 +150,8 @@ namespace CardsApp.Services
             }
         }
     }
+    public class InvalidBoardException : Exception
+    {
+    }
+
 }

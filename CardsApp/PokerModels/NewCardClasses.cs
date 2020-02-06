@@ -317,7 +317,7 @@ namespace CardsApp.PokerModels
         public override string ToString()
         {
             char[] ranks = "23456789TJQKA".ToCharArray();
-            char[] suits = {'s', 'h', 'd', 'c'};
+            char[] suits = {'h', 'c', 'd', 's'};
 
             return ranks[(int) Rank].ToString() + suits[(int) Suit].ToString();
         }

@@ -33,6 +33,23 @@ namespace CardsApp.PokerModels
                     return false;
                 }
 
+                return true;
+
+            }
+        }
+
+        public bool IsQualifying
+        {
+            get
+            {
+                var top = Hands.FirstOrDefault(x => x.Position == ChineseHandPosition.Top);
+                var middle = Hands.FirstOrDefault(x => x.Position == ChineseHandPosition.Middle);
+                var bottom = Hands.FirstOrDefault(x => x.Position == ChineseHandPosition.Bottom);
+                if (top == null || middle == null || bottom == null)
+                {
+                    return false;
+                }
+                
                 var topVsMiddle = top.Compare(middle);
                 var middleVsBottom = middle.Compare(bottom);
                 var topVsBottom = top.Compare(bottom);

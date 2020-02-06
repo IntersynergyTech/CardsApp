@@ -12,9 +12,9 @@ namespace CardsApp.PokerModels
         /// </summary>
         /// <param name="parseable"></param>
         /// <returns></returns>
-        public static List<PokerCard> ParseCards(string parseable)
+        public static List<Card> ParseCards(string parseable)
         {
-            var returnable = new List<PokerCard>();
+            var returnable = new List<Card>();
             if (parseable.Length % 2 == 0)
             {
                 for (int pos = 0; pos < parseable.Length; pos+= 2)
@@ -30,78 +30,13 @@ namespace CardsApp.PokerModels
             return returnable;
         }
 
-        public static PokerCard ParseCard(string parseable)
+        public static Card ParseCard(string parseable)
         {
             parseable = parseable.ToLower();
             var value = parseable.Substring(0, 1);
             var suit = parseable.Substring(1, 1);
 
-            var card = new PokerCard();
-            switch (suit)
-            {
-                case "s":
-                    card.Suit = CardSuit.Spades;
-                    break;
-                case "d":
-                    card.Suit = CardSuit.Diamonds;
-                    break;
-                case "c":
-                    card.Suit = CardSuit.Clubs;
-                    break;
-                case "h":
-                    card.Suit = CardSuit.Hearts;
-                    break;
-                default: 
-                    throw new InvalidSuitException($"{suit} is not recognised as a valid suit. Valid values are S, D, C and H (case insensitive)");
-            }
-
-            switch (value)
-            {
-                case "a":
-                case "1":
-                    card.Value = CardValue.Ace;
-                    break;
-                case "2":
-                    card.Value = CardValue.Two;
-                    break;
-                case "3":
-                    card.Value = CardValue.Three;
-                    break;
-                case "4":
-                    card.Value = CardValue.Four;
-                    break;
-                case "5":
-                    card.Value = CardValue.Five;
-                    break;
-                case "6":
-                    card.Value = CardValue.Six;
-                    break;
-                case "7":
-                    card.Value = CardValue.Seven;
-                    break;
-                case "8":
-                    card.Value = CardValue.Eight;
-                    break;
-                case "9":
-                    card.Value = CardValue.Nine;
-                    break;
-                case "0":
-                case "t":
-                    card.Value = CardValue.Ten;
-                    break;
-                case "j":
-                    card.Value = CardValue.Jack;
-                    break;
-                case "q":
-                    card.Value = CardValue.Queen;
-                    break;
-                case "k":
-                    card.Value = CardValue.King;
-                    break;
-                
-                default:
-                    throw new InvalidValueException($"{value} is not recognised as a valid suit. Valid values are 2-9, ATJQK (case insensitive). You can optionally use 0 for a 10 and 1 for an ace");
-            }
+            var card = new Card(parseable);
 
             return card;
         }

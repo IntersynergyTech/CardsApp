@@ -1,0 +1,45 @@
+@model CardsApp.Controllers.ChineseFormModel
+@{
+    ViewBag.Title = "Chinese Scoring";
+    Layout = "_Layout";
+}
+
+<h2>Chinese Calculator</h2>
+<form asp-controller="Chinese" asp-action="Calculate" method="post">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                @Html.DisplayNameFor(x => x.Player1Top)
+            </div>
+            <div class="col">
+                <input asp-for="Player1Top"/>
+            </div>
+            <div class="col">
+                <input asp-for="Player2Top"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                @Html.DisplayNameFor(x => x.Player1Middle)
+            </div>
+            <div class="col">
+                <input asp-for="Player1Middle"/>
+            </div>
+            <div class="col">
+                <input asp-for="Player2Middle"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                @Html.DisplayNameFor(x => x.Player1Bottom)
+            </div>
+            <div class="col">
+                <input asp-for="Player1Bottom"/>
+            </div>
+            <div class="col">
+                <input asp-for="Player2Bottom"/>
+            </div>
+        </div>
+    </div>
+    <button type="submit">Calculate</button>
+</form>
